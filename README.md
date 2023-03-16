@@ -6,8 +6,8 @@ Pong with Three Paddles is a browser-based game that adds a twist to the classic
 
 ### Controls
 
-- **Left Paddle:** Use the ArrowUp and ArrowDown keys to move the paddle up and down.
-- **Right Paddle:** Use the W and S keys to move the paddle up and down.
+- **Left Paddle:** Use the W and S keys to move the paddle up and down.
+- **Right Paddle:** Use the ArrowUp and ArrowDown keys to move the paddle up and down.
 - **Top Paddle:** Use the A and D keys to move the paddle left and right.
 
 ### Rules
