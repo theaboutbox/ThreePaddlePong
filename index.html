@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong with Three Paddles</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        canvas {
+            margin: 16px;
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pong with Three Paddles</h1>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div>
+        <h2>How to play:</h2>
+        <p>
+            <strong>Left Paddle:</strong> Use the ArrowUp and ArrowDown keys to move up and down.
+        </p>
+        <p>
+            <strong>Right Paddle:</strong> Use the W and S keys to move up and down.
+        </p>
+        <p>
+            <strong>Top Paddle:</strong> Use the A and D keys to move left and right.
+        </p>
+        <p>
+            The hit counter increases each time the ball hits a paddle and resets when the ball hits a wall.
+        </p>
+    </div>
+    <script>
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const ball = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            dx: 2,
+            dy: -2,
+            radius: 10
+        };
+
+        const verticalPaddleHeight = 100;
+        const verticalPaddleWidth = 10;
+        const horizontalPaddleHeight = 10;
+        const horizontalPaddleWidth = 100;
+        const paddleSpeed = 4;
+
+        const leftPaddle = {
+            x: 30,
+            y: canvas.height / 2 - verticalPaddleHeight / 2,
+            dy: 0
+        };
+
+        const rightPaddle = {
+            x: canvas.width - 30 - verticalPaddleWidth,
+            y: canvas.height / 2 - verticalPaddleHeight / 2,
+            dy: 0
+        };
+
+        const topPaddle = {
+            x: canvas.width / 2 - horizontalPaddleWidth / 2,
+            y: 30,
+            dx: 0
+        };
+
+        let hitCounter = 0;
+
+
+        function drawBall() {
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function drawVerticalPaddle(paddle) {
+            ctx.beginPath();
+            ctx.rect(paddle.x, paddle.y, verticalPaddleWidth, verticalPaddleHeight);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function drawHorizontalPaddle(paddle) {
+            ctx.beginPath();
+            ctx.rect(paddle.x, paddle.y, horizontalPaddleWidth, horizontalPaddleHeight);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function drawHitCounter() {
+            ctx.font = '24px Arial';
+            ctx.fillStyle = 'white';
+            ctx.fillText('Hits: ' + hitCounter, 10, 50);
+        }
+
+        function detectVerticalCollision(paddle) {
+            const inXRange = ball.x + ball.radius > paddle.x && ball.x - ball.radius < paddle.x + verticalPaddleWidth;
+            const inYRange = ball.y + ball.radius > paddle.y && ball.y - ball.radius < paddle.y + verticalPaddleHeight;
+            return inXRange && inYRange;
+        }
+
+        function detectHorizontalCollision(paddle) {
+            const inXRange = ball.x + ball.radius > paddle.x && ball.x - ball.radius < paddle.x + horizontalPaddleWidth;
+            const inYRange = ball.y + ball.radius > paddle.y && ball.y - ball.radius < paddle.y + horizontalPaddleHeight;
+            return inXRange && inYRange;
+        }
+
+
+function update() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ball.x += ball.dx;
+    ball.y += ball.dy;
+
+    if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
+        ball.dy = -ball.dy;
+        if (ball.y - ball.radius < 0) {
+            hitCounter = 0;
+        }
+    }
+
+    if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
+        ball.dx = -ball.dx;
+        hitCounter = 0;
+    }
+
+    if (detectVerticalCollision(leftPaddle) || detectVerticalCollision(rightPaddle)) {
+        ball.dx = -ball.dx;
+        hitCounter++;
+    }
+
+    if (detectHorizontalCollision(topPaddle)) {
+        ball.dy = -ball.dy;
+        hitCounter++;
+    }
+
+    leftPaddle.y += leftPaddle.dy;
+    rightPaddle.y += rightPaddle.dy;
+    topPaddle.x += topPaddle.dx;
+
+    drawBall();
+    drawVerticalPaddle(leftPaddle);
+    drawVerticalPaddle(rightPaddle);
+    drawHorizontalPaddle(topPaddle);
+    drawHitCounter();
+
+    requestAnimationFrame(update);
+}
+
+
+        function keyDownHandler(e) {
+            if (e.key === 'ArrowUp') {
+                leftPaddle.dy = -paddleSpeed;
+            } else if (e.key === 'ArrowDown') {
+                leftPaddle.dy = paddleSpeed;
+            } else if (e.key === 'w' || e.key === 'W') {
+                rightPaddle.dy = -paddleSpeed;
+            } else if (e.key === 's' || e.key === 'S') {
+                rightPaddle.dy = paddleSpeed;
+            } else if (e.key === 'a' || e.key === 'A') {
+                topPaddle.dx = -paddleSpeed;
+            } else if (e.key === 'd' || e.key === 'D') {
+                topPaddle.dx = paddleSpeed;
+            }
+        }
+
+        function keyUpHandler(e) {
+            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                leftPaddle.dy = 0;
+            } else if (e.key === 'w' || e.key === 'W' || e.key === 's' || e.key === 'S') {
+                rightPaddle.dy = 0;
+            } else if (e.key === 'a' || e.key === 'A' || e.key === 'd' || e.key === 'D') {
+                topPaddle.dx = 0;
+            }
+        }
+
+        document.addEventListener('keydown', keyDownHandler);
+        document.addEventListener('keyup', keyUpHandler);
+
+        update();
+
+    </script>
+</body>
+</html>
+
