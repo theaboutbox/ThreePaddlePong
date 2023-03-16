@@ -161,31 +161,32 @@ function update() {
 }
 
 
-        function keyDownHandler(e) {
-            if (e.key === 'ArrowUp') {
-                leftPaddle.dy = -paddleSpeed;
-            } else if (e.key === 'ArrowDown') {
-                leftPaddle.dy = paddleSpeed;
-            } else if (e.key === 'w' || e.key === 'W') {
-                rightPaddle.dy = -paddleSpeed;
-            } else if (e.key === 's' || e.key === 'S') {
-                rightPaddle.dy = paddleSpeed;
-            } else if (e.key === 'a' || e.key === 'A') {
-                topPaddle.dx = -paddleSpeed;
-            } else if (e.key === 'd' || e.key === 'D') {
-                topPaddle.dx = paddleSpeed;
-            }
-        }
+function keyDownHandler(e) {
+    if (e.key === 'ArrowUp') {
+        rightPaddle.dy = -paddleSpeed;
+    } else if (e.key === 'ArrowDown') {
+        rightPaddle.dy = paddleSpeed;
+    } else if (e.key === 'w' || e.key === 'W') {
+        leftPaddle.dy = -paddleSpeed;
+    } else if (e.key === 's' || e.key === 'S') {
+        leftPaddle.dy = paddleSpeed;
+    } else if (e.key === 'a' || e.key === 'A') {
+        topPaddle.dx = -paddleSpeed;
+    } else if (e.key === 'd' || e.key === 'D') {
+        topPaddle.dx = paddleSpeed;
+    }
+}
 
-        function keyUpHandler(e) {
-            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                leftPaddle.dy = 0;
-            } else if (e.key === 'w' || e.key === 'W' || e.key === 's' || e.key === 'S') {
-                rightPaddle.dy = 0;
-            } else if (e.key === 'a' || e.key === 'A' || e.key === 'd' || e.key === 'D') {
-                topPaddle.dx = 0;
-            }
-        }
+function keyUpHandler(e) {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        rightPaddle.dy = 0;
+    } else if (e.key === 'w' || e.key === 'W' || e.key === 's' || e.key === 'S') {
+        leftPaddle.dy = 0;
+    } else if (e.key === 'a' || e.key === 'A' || e.key === 'd' || e.key === 'D') {
+        topPaddle.dx = 0;
+    }
+}
+
 
         document.addEventListener('keydown', keyDownHandler);
         document.addEventListener('keyup', keyUpHandler);
